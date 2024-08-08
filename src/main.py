@@ -1,5 +1,10 @@
 from src.model_utils.audio_converter import find_keywords_from_audio
+from src.config.constants import DOWNLOAD_DIR
+import glob
 
 if __name__ == '__main__':
-    path = '/mnt/c/Developer_Workspace/stt_tools/downloads/147:_Tornado.mp3'
-    find_keywords_from_audio(path)
+    
+    mp3_files = glob.glob(f'{DOWNLOAD_DIR}*.mp3')
+    
+    for mp3_file in mp3_files:
+        find_keywords_from_audio(mp3_file)
