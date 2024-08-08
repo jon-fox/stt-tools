@@ -8,3 +8,4 @@ segment_*
 result.wav
 **/__pycache__/
 /output/*
+*.log
