@@ -1,2 +1,6 @@
 venv/*
 venv
+src/config/constants.py
+src/config/ki.txt
+downloads/*
+local_models/*
