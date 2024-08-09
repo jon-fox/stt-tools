@@ -9,5 +9,6 @@ result.wav
 **/__pycache__/
 /output/*
 /output_jsonl/*
+/cleaned_output/*
 *.log
 ENV.md

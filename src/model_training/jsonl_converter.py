@@ -4,7 +4,7 @@ import os
 
 current_dir = os.path.dirname(__file__)
 
-relative_output_path = os.path.join(current_dir, '..', '..', 'output', 'transcript_0_logging.json')
+relative_output_path = os.path.join(current_dir, '..', '..', 'cleaned_output', 'transcript_0_logging.json')
 
 with open(relative_output_path, 'r') as f:
     data = json.load(f)
@@ -29,7 +29,7 @@ with open(relative_jsonl_output_path, 'w') as outfile:
         messages = [
             {"role": "system", "content": OPEN_AI_SYSTEM_MESSAGE},
             {"role": "user", "content": OPEN_AI_USER_INSTRUCTIONS},
-            {"role": "assistant", "content": label}
+            {"role": "assistant", "content": }
         ]
 
         # Create a JSON object for each entry
