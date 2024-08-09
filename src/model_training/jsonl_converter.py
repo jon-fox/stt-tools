@@ -1,41 +1,52 @@
 import json
 from src.config.constants import *
 import os
+import glob
 
 current_dir = os.path.dirname(__file__)
 
-relative_output_path = os.path.join(current_dir, '..', '..', 'cleaned_output', 'transcript_0_logging.json')
+cleaned_output_dir = os.path.join(current_dir, '..', '..', 'cleaned_output')
 
-with open(relative_output_path, 'r') as f:
-    data = json.load(f)
+# getting all JSON files in the cleaned_output directory
+json_files = glob.glob(os.path.join(cleaned_output_dir, '*.json'))
 
-relative_jsonl_output_path = os.path.join(current_dir, '..', '..', 'output_jsonl', 'transcript_0_logging.jsonl')
+# filter out files that contain 'meta' in their names
+filtered_files = [f for f in json_files if 'meta' not in os.path.basename(f)]
 
-# creating a jsonl file
-with open(relative_jsonl_output_path, 'w') as outfile:
-    for entry in data:
-        
-        text = entry.get('text', '')
-        start_time = entry.get('start', 0)
-        end_time = entry.get('end', 0)
+meta_files = [f for f in json_files if 'meta' in os.path.basename(f)]
 
-        # checking if keyword or not
-        if any(keyword in text.lower() for keyword in keywords):
-            label = OPEN_AI_LABEL_1
-        else:
-            label = OPEN_AI_LABEL_2
+def find_meta_file(filtered_file):
+    base_name = os.path.basename(filtered_file)
+    meta_file_name = f"{os.path.splitext(base_name)[0]}_meta.json"
+    meta_file_path = os.path.join(cleaned_output_dir, meta_file_name)
+    return meta_file_path if meta_file_path in meta_files else None
 
-        
+# creating jsonl files for each filtered file
+for file_path in filtered_files:
+    #output file path
+    base_name = os.path.basename(file_path)
+    output_file_name = f"{os.path.splitext(base_name)[0]}_output.jsonl"
+    output_file_path = os.path.join(current_dir, '..', '..', 'output_jsonl', output_file_name)
+
+    meta_file_path = find_meta_file(file_path)
+
+    # opening transcript file, meta file and output file
+    with open(file_path, 'r') as infile, open(output_file_path, 'w') as outfile:
+        data = json.load(infile)
+        meta_data = {}
+        if meta_file_path:
+            with open(meta_file_path, 'r') as metafile:
+                expected_output = json.load(metafile)
+
         messages = [
             {"role": "system", "content": OPEN_AI_SYSTEM_MESSAGE},
-            {"role": "user", "content": OPEN_AI_USER_INSTRUCTIONS},
-            {"role": "assistant", "content": }
+            {"role": "user", "content": f"{OPEN_AI_USER_INSTRUCTIONS}|Transcript:{data}"},
+            {"role": "assistant", "content": expected_output}
         ]
 
-        # Create a JSON object for each entry
         json_obj = {"messages": messages}
 
-        # Write to JSONL file
+        # Write to the output file
         outfile.write(json.dumps(json_obj) + "\n")
 
 print("Conversion to JSONL with chat-like structure complete.")
