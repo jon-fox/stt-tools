@@ -5,11 +5,10 @@ from src.config.constants import OPEN_AI_MODEL_TYPE
 
 # https://platform.openai.com/docs/guides/structured-outputs/supported-schemas?context=ex2
 
-class ResearchPaperExtraction(BaseModel):
-    title: str
-    authors: list[str]
-    abstract: str
-    keywords: list[str]
+class ResponseExtraction(BaseModel):
+    Confidence_Score: int
+    Timestamps: str
+
 
 completion = client.beta.chat.completions.parse(
     model=OPEN_AI_MODEL_TYPE,
@@ -17,7 +16,7 @@ completion = client.beta.chat.completions.parse(
         {"role": "system", "content": ""},
         {"role": "user", "content": ""}
     ],
-    response_format=ResearchPaperExtraction,
+    response_format=ResponseExtraction,
 )
 
-research_paper = completion.choices[0].message.parsed
+response = completion.choices[0].message.parsed
