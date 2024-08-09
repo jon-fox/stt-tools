@@ -2,8 +2,16 @@ import json
 import tiktoken # for token counting
 import numpy as np
 from collections import defaultdict
+import os
+from src.config.constants import *
 
-data_path = "../output_jsonl/transcript_0_logging.jsonl"
+current_dir = os.path.dirname(__file__)
+
+jsonl_dir = os.path.join(current_dir, '..', '..', 'output_jsonl')
+
+filename = SAMPLE_JSONL_FILE
+
+data_path = os.path.join(jsonl_dir, filename)
 
 # Load the dataset
 with open(data_path, 'r', encoding='utf-8') as f:
