@@ -1,3 +1,4 @@
 boto3
 whisper-timestamped
 pydub
+openai

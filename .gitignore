@@ -8,4 +8,6 @@ segment_*
 result.wav
 **/__pycache__/
 /output/*
+/output_jsonl/*
 *.log
+ENV.md

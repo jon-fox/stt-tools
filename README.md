@@ -10,3 +10,7 @@ https://platform.openai.com/docs/guides/fine-tuning/fine-tuning-examples
 https://platform.openai.com/docs/guides/fine-tuning/check-data-formatting
 
 https://cookbook.openai.com/examples/chat_finetuning_data_prep
+
+https://cookbook.openai.com/examples/how_to_finetune_chat_models
+
+https://openai.com/index/introducing-structured-outputs-in-the-api/
