@@ -36,12 +36,12 @@ for file_path in filtered_files:
         meta_data = {}
         if meta_file_path:
             with open(meta_file_path, 'r') as metafile:
-                expected_output = json.load(metafile)
+                meta_data = json.load(metafile)
 
         messages = [
             {"role": "system", "content": OPEN_AI_SYSTEM_MESSAGE},
             {"role": "user", "content": f"{OPEN_AI_USER_INSTRUCTIONS}|Transcript:{data}"},
-            {"role": "assistant", "content": expected_output}
+            {"role": "assistant", "content": meta_data['expected_response']}
         ]
 
         json_obj = {"messages": messages}
