@@ -37,6 +37,8 @@ for file_path in filtered_files:
         if meta_file_path:
             with open(meta_file_path, 'r') as metafile:
                 meta_data = json.load(metafile)
+        
+        # https://jsonlines.org/validator/
 
         messages = [
             {"role": "system", "content": OPEN_AI_SYSTEM_MESSAGE},
