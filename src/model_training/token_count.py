@@ -67,6 +67,18 @@ print_distribution(n_messages, "num_messages_per_example")
 print_distribution(convo_lens, "num_total_tokens_per_example")
 print_distribution(assistant_message_lens, "num_assistant_tokens_per_example")
 
-n_too_long = sum(l > 16385 for l in convo_lens)
+# char_limit = 16385
+char_limit = 65536 # mini fine tuning limit
+n_too_long = 0
 
-print(f"\n{n_too_long} examples may be over the 16,385 token limit, they will be truncated during fine-tuning")
+# Iterate through convo_lens and print the corresponding lines that exceed the limit
+for i, length in enumerate(convo_lens):
+    if length > char_limit:
+        print(f"Example {i} exceeds the {char_limit} token limit, actual length is {length}:")
+        # print(json.dumps(dataset[i], indent=2))  # Pretty print the JSON for readability
+        last_100_chars = json.dumps(dataset[i])[-100:]
+        print(f"Last 100 characters of Example {i}: {last_100_chars}")
+        print("\n")
+        n_too_long += 1
+
+print(f"\n{n_too_long} examples may be over the {char_limit} token limit, they will be truncated during fine-tuning")
