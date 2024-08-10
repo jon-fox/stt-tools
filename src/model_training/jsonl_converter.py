@@ -43,7 +43,7 @@ for file_path in filtered_files:
         messages = [
             {"role": "system", "content": OPEN_AI_SYSTEM_MESSAGE},
             {"role": "user", "content": f"{OPEN_AI_USER_INSTRUCTIONS}|Transcript:{data}"},
-            {"role": "assistant", "content": meta_data['expected_response']}
+            {"role": "assistant", "content": f"{meta_data['expected_response']}"}
         ]
 
         json_obj = {"messages": messages}
