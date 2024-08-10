@@ -29,7 +29,7 @@ def get_file_path(pattern):
         return None
 
 # Define the pattern for the file you are looking for
-file_pattern = 'output_jsonl/transcript_0_logging_ad_1_output.jsonl'
+file_pattern = 'output_jsonl/transcript_0.jsonl'
 
 # Get the file path
 training_file_path = get_file_path(file_pattern)
