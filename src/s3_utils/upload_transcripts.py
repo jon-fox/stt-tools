@@ -28,16 +28,16 @@ import mimetypes
 from src.utils.logger_setup import logger
 
 
-def upload_file_to_space(spaces_client, space_name, file_src, save_as, **kwargs):
+def upload_file_to_bucket(spaces_client, bucket_name, file_src, save_as, **kwargs):
     """
     :param spaces_client: Spaces client
-    :param space_name: Unique name of space
+    :param bucket_name: Unique name of space
     :param file_src: File location on disk
     :param save_as: Where to save file in the space
     :param kwargs
     :return:
     """
-    logger.info(f"Uploading file to S3, space_name::{space_name}, file_src::{file_src}, save_as::{save_as}")
+    logger.info(f"Uploading file to S3, bucket_name::{bucket_name}, file_src::{file_src}, save_as::{save_as}")
 
     is_public = kwargs.get("is_public", False)
     content_type = kwargs.get("content_type")
@@ -62,9 +62,8 @@ def upload_file_to_space(spaces_client, space_name, file_src, save_as, **kwargs)
 
     return spaces_client.upload_file(
         file_src,
-        space_name,
+        bucket_name,
         save_as,
-        # boto3.s3.transfer.S3Transfer.ALLOWED_UPLOAD_ARGS
         ExtraArgs=extra_args
     )
 
