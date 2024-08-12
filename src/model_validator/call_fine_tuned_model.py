@@ -164,7 +164,7 @@ class FineTunedModelCaller:
                 print(event_handler.results)
                 print(f"#########################################################")
                 message = event_handler.results['message']
-                break
+                return message
             elif retrieving_thread_run.status == "queued" or retrieving_thread_run.status == "in_progress":
                 time.sleep(5)
                 pass
@@ -172,4 +172,4 @@ class FineTunedModelCaller:
                 print(f"Run status: {retrieving_thread_run.status}")
                 print(f"Run failed for file: {self.transcript_file_path}")
                 print(f"Run output: {retrieving_thread_run}")
-                break
+                raise Exception(f"Run failed for file: {self.transcript_file_path}")
