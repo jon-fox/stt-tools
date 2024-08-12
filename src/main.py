@@ -14,7 +14,8 @@ if __name__ == '__main__':
         api_key=api_key, 
         org_id=organization, 
         project_id=project, 
-        transcript_file_path="/mnt/c/Developer_Workspace/stt_tools/output/transcript_0_logging.json",
+        # transcript_file_path="/mnt/c/Developer_Workspace/stt_tools/output/transcript_0_logging.json",
+        transcript_file_path="/mnt/c/Developer_Workspace/stt_tools/output/transcript_3_logging.json",
         fine_tuned_model_id=FINE_TUNED_MODEL_ID
     )
 
