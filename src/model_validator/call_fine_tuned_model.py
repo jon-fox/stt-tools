@@ -64,7 +64,6 @@ class FineTunedModelCaller:
         file_paths = self.get_file_paths()
         print(f"File Paths: {file_paths}")
         file_streams = [open(path, "rb") for path in file_paths]
-        print(f"File Streams: {file_streams}")
 
         # Use the upload and poll SDK helper to upload the files, add them to the vector store,
         # and poll the status of the file batch for completion.
@@ -136,7 +135,6 @@ class FineTunedModelCaller:
         assistant_id = self._retrieve_assistant()
         
         thread = self._create_thread(user_instructions, assistant_id)
-        #   thread_id = _assistant_call(filename=filename, path=path)
 
         run = self.client.beta.threads.runs.create(
             thread_id=thread.id,
@@ -153,12 +151,12 @@ class FineTunedModelCaller:
 
             if retrieving_thread_run.status.lower() == "completed":
                 messages = self.client.beta.threads.messages.list(
-                thread_id=thread.id,
-                run_id=run.id
+                    thread_id=thread.id,
+                    run_id=run.id
                 )
                 # print(f"Messages: {messages.data}")
                 event_handler=EventHandler()
-                event_handler.on_message_done(messages.data[0])
+                event_handler.on_message_done(self.client, messages.data[0])
                 print("\n")
                 # Step 6: Retrieve the Messages added by the Assistant to the Thread
                 print(f"#########################################################")
@@ -166,6 +164,7 @@ class FineTunedModelCaller:
                 print(event_handler.results)
                 print(f"#########################################################")
                 message = event_handler.results['message']
+                break
             elif retrieving_thread_run.status == "queued" or retrieving_thread_run.status == "in_progress":
                 time.sleep(5)
                 pass
@@ -174,4 +173,3 @@ class FineTunedModelCaller:
                 print(f"Run failed for file: {self.transcript_file_path}")
                 print(f"Run output: {retrieving_thread_run}")
                 break
-
