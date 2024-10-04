@@ -1,5 +1,5 @@
 from pydub import AudioSegment
-import whisper_timestamped as whisper
+from faster_whisper import WhisperModel
 import concurrent.futures
 import json
 import os
@@ -147,10 +147,10 @@ def initialize_model_pool(device="cuda"):
         logger.info(f"Checking Model file path: {model_file_path}")
         if os.path.isfile(model_file_path):
             logger.info(f"Loading model from file: {model_file_path}")
-            whisper_model = whisper.load_model(model_file_path, device=device)
+            whisper_model = WhisperModel(model_file_path, device=device)
         else:
             logger.info(f"Downloading model from Hugging Face model hub")
-            whisper_model = whisper.load_model("tiny", download_root=os.path.join(MODEL_DOWNLOAD_PATH), device=device)
+            whisper_model = WhisperModel("tiny", download_root=os.path.join(MODEL_DOWNLOAD_PATH), device=device)
             # model = whisper.load_model("tiny", device=device)
         # model = whisper.load_model("tiny", device="cpu")
         model_pool.put(whisper_model)
@@ -162,10 +162,23 @@ def process_audio_segment(index, audio_segment):
         logger.info(f"Thread using model {id(model)}")
         segment_path = f"segment_{index}.wav"
         audio_segment.export(segment_path, format="wav")
-        result = whisper.transcribe(model, segment_path, language="en")
+        segments, info = model.transcribe(segment_path, language="en")
+        
+        segments_data = []
+
+        for segment in segments:
+            segment_info = {
+                "start": segment.start,
+                "end": segment.end,
+                "text": segment.text
+            }
+            segments_data.append(segment_info)
+
+        with open(f'segment_{index}.json', 'w') as json_file:
+            json.dump(segments_data, json_file, indent=4)
         # Clean up segment file after use
         # logger.info(f"Finding Timestamps for segment index {index}")
-        min_ms, max_ms = find_keyword_timestamps(result["segments"])
+        # min_ms, max_ms = find_keyword_timestamps(result["segments"])
         # Return the model to the pool
         model_pool.put(model)
     except Exception as e:
