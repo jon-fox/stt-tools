@@ -1,0 +1,4 @@
+faster-whisper
+boto3
+pydub
+openai
