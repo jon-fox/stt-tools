@@ -9,6 +9,8 @@ To set up the environment, use the following command:
 ```bash
 export PYTHONPATH=/mnt/c/Developer_Workspace/stt_tools/src:$PYTHONPATH
 
+sudo apt install nvidia-cuda-toolkit # for faster whisper install https://github.com/SYSTRAN/faster-whisper/issues/516
+
 ## Useful Links
 
 | Description | Link |
