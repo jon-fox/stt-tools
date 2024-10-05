@@ -147,7 +147,9 @@ def initialize_model_pool(device="cuda"):
         logger.info(f"Checking Model file path: {model_file_path}")
         if os.path.isfile(model_file_path):
             logger.info(f"Loading model from file: {model_file_path}")
-            whisper_model = WhisperModel(model_file_path, device=device)
+            whisper_model = WhisperModel("tiny", device=device)
+            # whisper_model = WhisperModel(model_size_or_path=model_file_path, device=device)
+            
         else:
             logger.info(f"Downloading model from Hugging Face model hub")
             whisper_model = WhisperModel("tiny", download_root=os.path.join(MODEL_DOWNLOAD_PATH), device=device)
@@ -185,6 +187,9 @@ def process_audio_segment(index, audio_segment):
         import traceback
         logger.error(traceback.print_exc())
         raise Exception(f"An error occurred during Transcription: {str(e)}")
+    
+    # HACK return here for now
+    return
 
     # logger.info(f"keywordtimestamps: {keyword_timestamps}")
     logger.info(f"##############################################")
