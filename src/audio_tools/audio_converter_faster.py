@@ -173,32 +173,17 @@ def process_audio_segment(index, audio_segment):
         # result = whisperx.align(result["segments"], model_a, metadata, audio, "cuda", return_char_alignments=False)
 
         # print(result["segments"])
-        
+
         # delete model if low on GPU resources
-        gc.collect()
-        torch.cuda.empty_cache()
-        del model
+        # gc.collect()
+        # torch.cuda.empty_cache()
+        # del model
 
-        segments_data = []
-
-        for segment in result['segments']:
-            segment_info = {
-                "text": segment['text'],
-                "start": segment['start'],
-                "end": segment['end']
-            }
-            segments_data.append(segment_info)
-
-        with open(f'segment_{index}.json', 'w') as json_file:
-            json.dump(segments_data, json_file, indent=4)
         # Clean up segment file after use
-        # logger.info(f"Finding Timestamps for segment index {index}")
-        # min_ms, max_ms = find_keyword_timestamps(result["segments"])
+        logger.info(f"Finding Timestamps for segment index {index}")
+        min_ms, max_ms = find_keyword_timestamps(result["segments"])
         # Return the model to the pool
         model_pool.put(model)
-
-        # HACK return here for now
-        return
 
     except Exception as e:
         import traceback
