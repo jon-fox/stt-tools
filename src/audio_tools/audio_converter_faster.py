@@ -1,5 +1,6 @@
 from pydub import AudioSegment
-from faster_whisper import WhisperModel
+import whisperx
+import gc
 import concurrent.futures
 import json
 import os
@@ -147,12 +148,12 @@ def initialize_model_pool(device="cuda"):
         logger.info(f"Checking Model file path: {model_file_path}")
         if os.path.isfile(model_file_path):
             logger.info(f"Loading model from file: {model_file_path}")
-            whisper_model = WhisperModel("tiny", device=device)
+            whisper_model = whisperx.load_model("tiny", device=device)
             # whisper_model = WhisperModel(model_size_or_path=model_file_path, device=device)
             
         else:
             logger.info(f"Downloading model from Hugging Face model hub")
-            whisper_model = WhisperModel("tiny", download_root=os.path.join(MODEL_DOWNLOAD_PATH), device=device)
+            whisper_model = whisperx.load_model("tiny", download_root=os.path.join(MODEL_DOWNLOAD_PATH), device=device)
             # model = whisper.load_model("tiny", device=device)
         # model = whisper.load_model("tiny", device="cpu")
         model_pool.put(whisper_model)
@@ -164,7 +165,8 @@ def process_audio_segment(index, audio_segment):
         logger.info(f"Thread using model {id(model)}")
         segment_path = f"segment_{index}.wav"
         audio_segment.export(segment_path, format="wav")
-        segments, info = model.transcribe(segment_path, language="en")
+        audio = whisperx.load_audio(segment_path)
+        segments = model.transcribe(audio, language="en")
         
         segments_data = []
 

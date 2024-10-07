@@ -2,6 +2,8 @@ venv/*
 venv
 fastervenv
 fastervenv/*
+whisperxvenv/*
+whisperxvenv
 src/config/constants.py
 src/config/ki.txt
 downloads/*
