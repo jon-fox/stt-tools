@@ -11,6 +11,14 @@ export PYTHONPATH=/mnt/c/Developer_Workspace/stt_tools/src:$PYTHONPATH
 
 sudo apt install nvidia-cuda-toolkit # for faster whisper install https://github.com/SYSTRAN/faster-whisper/issues/516
 
+pip install nvidia-cudnn-cu12
+
+pip install ctranslate2
+
+sudo find / -type f -iname '*libcudnn_ops_infer.so.8*'
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/c/Developer_Workspace/stt_tools/whisperxvenv/lib/python3.11/site-packages/nvidia/cudnn/lib/
+
 ## whisperx uses faster whisper in the backend
 https://github.com/m-bain/whisperX
 

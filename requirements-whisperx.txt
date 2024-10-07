@@ -2,3 +2,5 @@ whisperx
 boto3
 pydub
 openai
+torch==2.3.1
+ctranslate2

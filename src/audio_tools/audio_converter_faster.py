@@ -1,6 +1,7 @@
 from pydub import AudioSegment
 import whisperx
 import gc
+import torch
 import concurrent.futures
 import json
 import os
@@ -166,15 +167,25 @@ def process_audio_segment(index, audio_segment):
         segment_path = f"segment_{index}.wav"
         audio_segment.export(segment_path, format="wav")
         audio = whisperx.load_audio(segment_path)
-        segments = model.transcribe(audio, language="en")
+        result = model.transcribe(audio, language="en")
+
+        # model_a, metadata = whisperx.load_align_model(language_code=result["language"], device="cuda")
+        # result = whisperx.align(result["segments"], model_a, metadata, audio, "cuda", return_char_alignments=False)
+
+        # print(result["segments"])
         
+        # delete model if low on GPU resources
+        gc.collect()
+        torch.cuda.empty_cache()
+        del model
+
         segments_data = []
 
-        for segment in segments:
+        for segment in result['segments']:
             segment_info = {
-                "start": segment.start,
-                "end": segment.end,
-                "text": segment.text
+                "text": segment['text'],
+                "start": segment['start'],
+                "end": segment['end']
             }
             segments_data.append(segment_info)
 
@@ -185,13 +196,14 @@ def process_audio_segment(index, audio_segment):
         # min_ms, max_ms = find_keyword_timestamps(result["segments"])
         # Return the model to the pool
         model_pool.put(model)
+
+        # HACK return here for now
+        return
+
     except Exception as e:
         import traceback
         logger.error(traceback.print_exc())
         raise Exception(f"An error occurred during Transcription: {str(e)}")
-    
-    # HACK return here for now
-    return
 
     # logger.info(f"keywordtimestamps: {keyword_timestamps}")
     logger.info(f"##############################################")
