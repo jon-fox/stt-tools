@@ -9,7 +9,7 @@ setup(
     version='0.1.0',  
     description='Common openai and stt tools library',
     author='Jon Fox',
-    author_email='jon@foxsolutions.dev',
+    author_email='jon',
     url='https://github.com/jon-fox/stt_tools',
     packages=find_packages(),
     install_requires=read_requirements(),
